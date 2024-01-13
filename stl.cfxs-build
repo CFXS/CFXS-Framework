@@ -1,0 +1,24 @@
+local config = ...
+
+assert(config.stl != nil, "stl not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+assert(type(config.stl) == "string", "stl is not a string\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+assert(config.exceptions != nil, "exceptions not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+assert(type(config.exceptions) == "boolean", "exceptions is not a boolean\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+assert(config.rtti != nil, "rtti not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+assert(type(config.rtti) == "boolean", "rtti is not a boolean\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+
+if config.stl == "eastl" then
+    printf(" - Selected stl: eastl")
+    printf(" - Exceptions "..(config.exceptions and "enabled" or "disabled"))
+    printf(" - RTTI "..(config.rtti and "enabled" or "disabled"))
+
+    cfxs_framework:add_include_paths("public", "./modules/EASTL")
+    cfxs_framework:add_definitions("public", {
+        "EASTL_OPENSOURCE=1",
+        "EASTL_EXCEPTIONS_ENABLED="..(config.exceptions and "1" or "0"),
+        "EASTL_RTTI_ENABLED="..(config.rtti and "1" or "0"),
+        "stl=eastl",
+    })
+else
+    error("Unsupported stl: "..config.stl)
+end

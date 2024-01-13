@@ -1,0 +1,17 @@
+import("./../../Core/ARM", { core = "M4F" })
+_G.CFXS_PLATFORM = "Tiva"
+_G.CFXS_STARTUP_MODEL = "TM4C129"
+
+-- CMSIS defines
+add_global_definitions({
+    "__CM4_REV=0x0100U",
+    "__MPU_PRESENT=1U",
+    "__NVIC_PRIO_BITS=3U",
+    "__FPU_PRESENT=1U",
+})
+
+-- Tiva library defines
+add_global_definitions({
+    "PART_TM4C1294NCPDT",
+    "TARGET_IS_TM4C129_RA2",
+})

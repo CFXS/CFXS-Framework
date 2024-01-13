@@ -1,0 +1,27 @@
+local config = ...
+
+if config.debug_io == nil then
+    config.debug_io = "none"
+else
+    assert(type(config.debug_io) == "string", "debug_io is not a string\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+end
+
+if config.debug_io == "none" then
+    printf(" - Selected Debug IO: None")
+    cfxs_framework:add_sources("./modules/DebugIO/none.cpp")
+elseif config.debug_io == "segger_rtt" then
+    printf(" - Selected Debug IO: Segger RTT")
+    if config.debug_io_config == nil then
+        printf(" ! config.debug_io_config not defined")
+    end
+    import_git("https://github.com/CFXS/SeggerRTT-printf.git", "master", config.debug_io_config)
+    table.insert(_G.CFXS_FRAMEWORK_USE_LIBRARIES, segger_rtt)
+    cfxs_framework:add_libraries(segger_rtt)
+    cfxs_framework:add_sources("./modules/DebugIO/segger_rtt.cpp")
+elseif config.debug_io == "swo" then
+    assert(_G.CFXS_ARCH == "ARM", "Unsupported architecture")
+    printf(" - Selected Debug IO: SWO")
+    cfxs_framework:add_sources("./modules/DebugIO/swo.cpp")
+else
+    error("Unsupported debug_io: "..config.debug_io)
+end

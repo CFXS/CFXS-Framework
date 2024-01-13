@@ -1,0 +1,54 @@
+local config = ...
+local CONFIG_TEMPLATE = [[
+{
+    c_standard   = <std>,
+    cpp_standard = <std>,
+    path_prefix  = <path_prefix (optional)>
+}
+]]
+assert(config != nil, "Import arguments not defined\n"..CONFIG_TEMPLATE)
+assert(config.c_standard != nil, "c_standard not defined\n"..CONFIG_TEMPLATE)
+assert(config.cpp_standard != nil, "c_standard not defined\n"..CONFIG_TEMPLATE)
+printf("Configure for GCC (C%s, C++%s)", config.c_standard, config.cpp_standard)
+
+_G.CFXS_TOOLCHAIN = "GCC"
+
+local path_prefix = config.path_prefix and config.path_prefix or ""
+
+-- use gcc instead of ld - because I have no idea what I am doing and ld does not work
+set_linker(path_prefix.."arm-none-eabi-gcc")
+
+set_archiver(path_prefix.."arm-none-eabi-ar")
+set_c_compiler(path_prefix.."arm-none-eabi-gcc", config.c_standard)
+set_cpp_compiler(path_prefix.."arm-none-eabi-g++", config.cpp_standard)
+set_asm_compiler(path_prefix.."arm-none-eabi-gcc")
+
+add_global_compile_options("C/C++", {
+    "-ffunction-sections", -- place functions in seperate sections
+    "-fdata-sections",     -- place data in seperate sections
+    "-fno-common",
+    "-fno-unwind-tables",
+
+    -- temporary for clangd
+    "-I/usr/lib/gcc/arm-none-eabi/12.2.1/include",
+    "-I/usr/lib/gcc/arm-none-eabi/12.2.1/include-fixed",
+    "-I/usr/arm-none-eabi/include",
+    "-I/usr/arm-none-eabi/include/c++/12.2.1",
+    "-I/usr/arm-none-eabi/include/c++/12.2.1/arm-none-eabi",
+    "-I/usr/arm-none-eabi/include/c++/12.2.1/backward",
+})
+
+add_global_compile_options("C++", {
+    "-felide-constructors",
+    "-fno-rtti",
+    "-fno-exceptions",
+    "-fno-use-cxa-atexit",
+    "-fno-threadsafe-statics",
+    "-fpermissive",
+})
+
+add_global_link_options({
+    "-specs=nosys.specs",  -- implement syscalls as stubs
+    "-nostartfiles",       -- do not generate start functions
+    "-Wl,--gc-sections",    -- remove unused sections
+})

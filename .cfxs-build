@@ -1,0 +1,59 @@
+assert(_G[get_current_script_path()] == nil, "CFXS-Framework can only be included once")
+_G[get_current_script_path()] = true
+
+printf("Load CFXS-Framework")
+local config = ...
+_G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
+{
+    -- Toolchain Config
+    c_standard               = <c standard number (89, 11, 18, ...)>,
+    cpp_standard             = <c++ standard number> (11, 14, 20, ...),
+    toolchain                = <toolchain preset name>,
+    toolchain_path_prefix    = <path prefix (optional)>,
+    part                     = "<manufacturer>/<part number>",
+    
+    -- Framework STL Config
+    stl        = <std | eastl>,  -- Select stl:: namespace
+    exceptions = <true | false>, -- Exceptions enabled
+    rtti       = <true | false>, -- RTTI enabled
+    
+    -- Framework Debug Config
+    debug_io        = <"none"/nil | "swo" | _G"segger_rtt">, -- Debug IO implementation (default = nil/none)
+    debug_io_config = *
+    
+    -- Framework Print Config
+    printf        = <"light"/nil | "default">, -- printf implementation to use (default = light/nil)
+    printf_config = {
+        -- [light] -------------------------------------------------
+            buf_ntoa            = <n>, -- default = 32
+            buf_aton            = <n>, -- default = 32
+            support_float       = <boolean>, -- (default = true)
+            support_exponential = <boolean>, -- (default = false)
+            support_long_long   = <boolean>, -- (default = true)
+            support_ptrdiff     = <boolean>, -- (default = false)
+        ------------------------------------------------------------
+    },
+}
+]]
+assert(config != nil, "Import arguments not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+
+_G.CFXS_FRAMEWORK_LIBRARIES = {}
+import("./toolchain", config)
+
+_G.cfxs_framework = create_library("CFXS-Framework")
+cfxs_framework:add_sources({"./src/*.c", "./src/*.cpp", "./modules/nosys.cpp"})
+
+cfxs_framework:create_precompiled_header({
+    "<CFXS_Common.h>"
+})
+
+_G.CFXS_FRAMEWORK_USE_LIBRARIES = {}
+
+import("./stl.cfxs-build", config)
+import("./debug_io.cfxs-build", config)
+import("./printf.cfxs-build", config)
+
+cfxs_framework:add_libraries(_G.CFXS_FRAMEWORK_LIBRARIES)
+table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, cfxs_framework)
+
+_G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = nil

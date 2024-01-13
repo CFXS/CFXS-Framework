@@ -1,0 +1,92 @@
+assert(_G[get_current_script_path()] == nil, "Core/ARM can only be included once")
+_G[get_current_script_path()] = true
+local config = ...
+local CONFIG_TEMPLATE = [[
+{
+    core = <core (M4 | M4F | M7 | ...)>
+    options = <core options (optional)>
+}
+]]
+
+assert(config != nil, "Import arguments not defined\n"..CONFIG_TEMPLATE)
+assert(config.core != nil, "core not defined")
+
+-- Reference: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
+
+local function load_flags_M4(options)
+    add_global_definitions("CFXS_CORE_CORTEX_M4")
+    if _G.CFXS_TOOLCHAIN == "GCC" or _G.CFXS_TOOLCHAIN == "Clang" then
+        add_global_compile_options("C/C++", {
+            "-mcpu=cortex-m4",
+            "-march=armv7e-m",
+            "-mtune=cortex-m4",
+            "-mfloat-abi=hard",
+        })
+        add_global_link_options({
+            "-mcpu=cortex-m4",
+            "-march=armv7e-m",
+            "-mtune=cortex-m4",
+            "-mfloat-abi=hard",
+        })
+        if options.no_thumb == nil then
+            add_global_compile_options("C/C++", "-mthumb")
+            add_global_link_options("-mthumb")
+        end
+        if options.fpu == true then
+            add_global_compile_options("C/C++", "-mfpu=fpv4-sp-d16")
+            add_global_link_options("-mfpu=fpv4-sp-d16")
+        end
+    else
+        error("Toolchain [".._G.CFXS_TOOLCHAIN.."] not implemented")
+    end
+end
+
+local function load_flags_M7(options)
+    add_global_definitions("CFXS_CORE_CORTEX_M7")
+    if _G.CFXS_TOOLCHAIN == "GCC" or _G.CFXS_TOOLCHAIN == "Clang" then
+        add_global_compile_options("C/C++", {
+            "-mcpu=cortex-m7",
+            "-march=armv7e-m",
+            "-mtune=cortex-m7",
+            "-mfloat-abi=hard",
+        })
+        add_global_link_options({
+            "-mcpu=cortex-m7",
+            "-march=armv7e-m",
+            "-mtune=cortex-m7",
+            "-mfloat-abi=hard",
+        })
+        if options.no_thumb == nil then
+            add_global_compile_options("C/C++", "-mthumb")
+            add_global_link_options("-mthumb")
+        end
+        if options.fpu == true then
+            add_global_compile_options("C/C++", "-mfpu=fpv5-sp-d16")
+            add_global_link_options("-mfpu=fpv5-sp-d16")
+        end
+    else
+        error("Toolchain [".._G.CFXS_TOOLCHAIN.."] not implemented")
+    end
+end
+
+assert(_G.CFXS_TOOLCHAIN != nil, "_G.TOOLCHAIN not defined")
+assert(_G.CFXS_ARCH == nil,      "_G.CFXS_ARCH already defined")
+_G.CFXS_ARCH = "ARM"
+
+if config.options == nil then
+    config.options = {}
+end
+
+if config.core == "M4" then
+    load_flags_M4(config.options)
+elseif config.core == "M4F" then
+    -- TODO: check why call stack is broken with an error here, call stack ends at last caller, not error location
+    -- error = unpack options/nil instead of config.options
+    load_flags_M4({fpu = true, table.unpack(config.options)})
+elseif config.core == "M7" then
+    load_flags_M7({fpu = true, table.unpack(config.options)})
+else
+    error("Unsupported core: ARM Cortex-" .. config.core)
+end
+
+printf(" - Selected Core: ARM Cortex-%s", config.core)

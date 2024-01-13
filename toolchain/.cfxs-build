@@ -1,0 +1,48 @@
+assert(_G[get_current_script_path()] == nil, "CFXS-Toolchain can only be included once")
+_G[get_current_script_path()] = true
+
+printf("CFXS-Toolchain v1.0")
+local config = ...
+local CONFIG_TEMPLATE = [[
+{
+    c_standard               = <c standard number (89, 11, 18, ...)>,
+    cpp_standard             = <c++ standard number> (11, 14, 20, ...),
+    toolchain                = <toolchain preset name>,
+    toolchain_path_prefix    = <path prefix (optional)>,
+    part                     = "<manufacturer>/<part number>"
+}
+]]
+
+assert(_G.CFXS_FRAMEWORK_LIBRARIES != nil, "Standalone import of CFXS-Toolchain requires a global table: _G.CFXS_FRAMEWORK_LIBRARIES = {}")
+
+assert(config != nil, "Import arguments not defined\n"..CONFIG_TEMPLATE)
+assert(config.c_standard != nil, "c_standard not defined\n"..CONFIG_TEMPLATE)
+assert(config.cpp_standard != nil, "cpp_standard not defined\n"..CONFIG_TEMPLATE)
+assert(config.toolchain != nil, "toolchain not defined\n"..CONFIG_TEMPLATE)
+assert(config.part != nil, "part not defined\n"..CONFIG_TEMPLATE)
+assert(type(config.part) == "string", "part is not a string\n"..CONFIG_TEMPLATE)
+
+local toolchain_path = "./"..tostring(config.toolchain)
+if exists(toolchain_path) then
+    import(toolchain_path, {
+        c_standard = config.c_standard,
+        cpp_standard = config.cpp_standard,
+        toolchain_path_prefix = config.toolchain_path_prefix
+    })
+else
+    error("Unknown toolchain: "..tostring(config.toolchain))
+end
+
+local manufacturer = config.part:match("(.+)/.-")
+local part_number = config.part:match(".-/(.+)")
+assert(manufacturer != nil or part != nil, "part - invalid format\n"..CONFIG_TEMPLATE)
+local mf_path = "./Device/"..manufacturer
+if exists(mf_path) then
+    import(mf_path, {
+        part = part_number
+    })
+else
+    error("Unknown part: "..tostring(config.part))
+end
+
+add_global_include_paths("./global")
