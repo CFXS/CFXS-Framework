@@ -6,9 +6,9 @@ local CONFIG_TEMPLATE = [[
     path_prefix  = <path_prefix (optional)>
 }
 ]]
-assert(config != nil, "Import arguments not defined\n"..CONFIG_TEMPLATE)
-assert(config.c_standard != nil, "c_standard not defined\n"..CONFIG_TEMPLATE)
-assert(config.cpp_standard != nil, "c_standard not defined\n"..CONFIG_TEMPLATE)
+usage_assert(config != nil, "Import arguments not defined", CONFIG_TEMPLATE)
+usage_assert(config.c_standard != nil, "c_standard not defined", CONFIG_TEMPLATE)
+usage_assert(config.cpp_standard != nil, "c_standard not defined", CONFIG_TEMPLATE)
 printf("Configure for GCC (C%s, C++%s)", config.c_standard, config.cpp_standard)
 
 _G.CFXS_TOOLCHAIN = "GCC"

@@ -5,9 +5,9 @@ local CONFIG_TEMPLATE = [[
     part = <part number>
 }
 ]]
-assert(config != nil, "Import arguments not defined\n"..CONFIG_TEMPLATE)
-assert(config.part != nil, "part not defined\n"..CONFIG_TEMPLATE)
-assert(type(config.part) == "string", "part is not a string\n"..CONFIG_TEMPLATE)
+usage_assert(config != nil, "Import arguments not defined", CONFIG_TEMPLATE)
+usage_assert(config.part != nil, "part not defined", CONFIG_TEMPLATE)
+usage_assert(type(config.part) == "string", "part is not a string", CONFIG_TEMPLATE)
 
 local part_path = "./"..config.part..".cfxs-build"
 if exists(part_path) then

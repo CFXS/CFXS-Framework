@@ -8,8 +8,8 @@ local CONFIG_TEMPLATE = [[
 }
 ]]
 
-assert(config != nil, "Import arguments not defined\n"..CONFIG_TEMPLATE)
-assert(config.core != nil, "core not defined")
+usage_assert(config != nil, "Import arguments not defined", CONFIG_TEMPLATE)
+usage_assert(config.core != nil, "core not defined", CONFIG_TEMPLATE)
 
 -- Reference: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
 

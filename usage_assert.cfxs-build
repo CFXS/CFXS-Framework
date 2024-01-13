@@ -1,6 +1,6 @@
 _G.usage_assert = function(condition, message, usage)
     if not condition then
-        printf("Usage:\n", usage)
+        printf("Usage:\n%s", usage)
         assert(condition, message)
     end
 end
