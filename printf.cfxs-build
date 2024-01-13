@@ -3,7 +3,7 @@ local config = ...
 if config.printf == nil then
     config.printf = "light"
 else
-    assert(type(config.printf) == "string", "printf is not a string\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.printf) == "string", "printf is not a string", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
 end
 
 if config.printf == "light" then
@@ -40,12 +40,12 @@ if config.printf == "light" then
         config.printf_config.support_ptrdiff = default_support_ptrdiff
     end
 
-    assert(type(config.printf_config.buf_ntoa) == "number", "buf_ntoa is not a number")
-    assert(type(config.printf_config.buf_aton) == "number", "buf_aton is not a number")
-    assert(type(config.printf_config.support_float) == "boolean", "support_float is not a boolean")
-    assert(type(config.printf_config.support_exponential) == "boolean", "support_exponential is not a boolean")
-    assert(type(config.printf_config.support_long_long) == "boolean", "support_long_long is not a boolean")
-    assert(type(config.printf_config.support_ptrdiff) == "boolean", "support_ptrdiff is not a boolean")
+    usage_assert(type(config.printf_config.buf_ntoa) == "number", "buf_ntoa is not a number", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.printf_config.buf_aton) == "number", "buf_aton is not a number", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.printf_config.support_float) == "boolean", "support_float is not a boolean", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.printf_config.support_exponential) == "boolean", "support_exponential is not a boolean", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.printf_config.support_long_long) == "boolean", "support_long_long is not a boolean", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.printf_config.support_ptrdiff) == "boolean", "support_ptrdiff is not a boolean", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
 
     -- check if differs from actual default to not pollute define list
     if config.printf_config.buf_ntoa != default_ntoa then

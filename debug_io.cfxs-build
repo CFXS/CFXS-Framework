@@ -3,7 +3,7 @@ local config = ...
 if config.debug_io == nil then
     config.debug_io = "none"
 else
-    assert(type(config.debug_io) == "string", "debug_io is not a string\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+    usage_assert(type(config.debug_io) == "string", "debug_io is not a string", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
 end
 
 if config.debug_io == "none" then

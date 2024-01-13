@@ -1,6 +1,8 @@
 assert(_G[get_current_script_path()] == nil, "CFXS-Toolchain can only be included once")
 _G[get_current_script_path()] = true
 
+import("./../usage_assert.cfxs-build")
+
 printf("CFXS-Toolchain v1.0")
 local config = ...
 local CONFIG_TEMPLATE = [[

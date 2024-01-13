@@ -1,11 +1,11 @@
 local config = ...
 
-assert(config.stl != nil, "stl not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
-assert(type(config.stl) == "string", "stl is not a string\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
-assert(config.exceptions != nil, "exceptions not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
-assert(type(config.exceptions) == "boolean", "exceptions is not a boolean\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
-assert(config.rtti != nil, "rtti not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
-assert(type(config.rtti) == "boolean", "rtti is not a boolean\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(config.stl != nil, "stl not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(type(config.stl) == "string", "stl is not a string", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(config.exceptions != nil, "exceptions not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(type(config.exceptions) == "boolean", "exceptions is not a boolean", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(config.rtti != nil, "rtti not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(type(config.rtti) == "boolean", "rtti is not a boolean", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
 
 if config.stl == "eastl" then
     printf(" - Selected stl: eastl")

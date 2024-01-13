@@ -1,0 +1,14 @@
+local config = ...
+
+if config.heap == nil then
+    config.heap = "dlmalloc"
+else
+    usage_assert(type(config.heap) == "string", "heap is not a string", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+end
+
+if config.heap == "dlmalloc" then
+    printf(" - Selected dlmalloc heap implementation")
+    cfxs_framework:add_sources("./modules/dlmalloc.cpp")
+else
+    error("Unsupported heap implementation: "..config.heap)
+end

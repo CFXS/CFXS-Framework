@@ -1,6 +1,8 @@
 assert(_G[get_current_script_path()] == nil, "CFXS-Framework can only be included once")
 _G[get_current_script_path()] = true
 
+import("./usage_assert.cfxs-build")
+
 printf("Load CFXS-Framework")
 local config = ...
 _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
@@ -18,7 +20,7 @@ _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
     rtti       = <true | false>, -- RTTI enabled
     
     -- Framework Debug Config
-    debug_io        = <"none"/nil | "swo" | _G"segger_rtt">, -- Debug IO implementation (default = nil/none)
+    debug_io        = <"none"/nil | "swo" | "segger_rtt">, -- Debug IO implementation (default = nil/none)
     debug_io_config = *
     
     -- Framework Print Config
@@ -33,9 +35,13 @@ _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
             support_ptrdiff     = <boolean>, -- (default = false)
         ------------------------------------------------------------
     },
+
+    -- Heap Config
+    heap = <"dlmalloc"/nil> -- Heap implementation (default = dlmalloc/nil)
+    heap_config = *
 }
 ]]
-assert(config != nil, "Import arguments not defined\n".._G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(config != nil, "Import arguments not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
 
 _G.CFXS_FRAMEWORK_LIBRARIES = {}
 import("./toolchain", config)
@@ -52,6 +58,7 @@ _G.CFXS_FRAMEWORK_USE_LIBRARIES = {}
 import("./stl.cfxs-build", config)
 import("./debug_io.cfxs-build", config)
 import("./printf.cfxs-build", config)
+import("./heap.cfxs-build", config)
 
 cfxs_framework:add_libraries(_G.CFXS_FRAMEWORK_LIBRARIES)
 table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, cfxs_framework)
