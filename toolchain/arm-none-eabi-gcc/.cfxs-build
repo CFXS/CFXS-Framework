@@ -28,6 +28,7 @@ add_global_compile_options("C/C++", {
     "-fdata-sections",     -- place data in seperate sections
     "-fno-common",
     "-fno-unwind-tables",
+    "-Wl,--gc-sections", -- remove unused sections
 
     -- temporary for clangd
     "-I/usr/lib/gcc/arm-none-eabi/12.2.1/include",
@@ -48,7 +49,7 @@ add_global_compile_options("C++", {
 })
 
 add_global_link_options({
-    "-specs=nosys.specs",  -- implement syscalls as stubs
-    "-nostartfiles",       -- do not generate start functions
-    "-Wl,--gc-sections",    -- remove unused sections
+    "-specs=nano.specs", -- implement syscalls as stubs
+    "-nostartfiles",     -- do not generate start functions
+    "-Wl,--gc-sections", -- remove unused sections
 })
