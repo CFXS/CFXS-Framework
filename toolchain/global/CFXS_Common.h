@@ -1,7 +1,7 @@
 #ifndef __COMMON_PCH_HPP__
 #define __COMMON_PCH_HPP__
 
-#if defined(gcc)
+#if defined(gcc) || defined(__clang__)
     #define __interrupt __attribute__((interrupt("irq")))
     #define __weak      __attribute__((weak))
     #ifndef __used

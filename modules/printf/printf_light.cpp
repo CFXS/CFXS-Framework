@@ -51,11 +51,12 @@ extern int __cfxs_putchar(int c);
 
 // Required for printf("no %% args") to not generate 1000000TB of code
 int puts(const char* str) {
-    int n = 0;
+    int n = 1;
     while (*str) {
         _putchar(*str++);
         n++;
     }
+    _putchar('\n');
     return n;
 }
 

@@ -9,19 +9,22 @@ local CONFIG_TEMPLATE = [[
 usage_assert(config != nil, "Import arguments not defined", CONFIG_TEMPLATE)
 usage_assert(config.c_standard != nil, "c_standard not defined", CONFIG_TEMPLATE)
 usage_assert(config.cpp_standard != nil, "c_standard not defined", CONFIG_TEMPLATE)
-printf("Configure for GCC (C%s, C++%s)", config.c_standard, config.cpp_standard)
+printf("Configure for Clang (C%s, C++%s)", config.c_standard, config.cpp_standard)
 
-_G.CFXS_TOOLCHAIN = "GCC"
+_G.CFXS_TOOLCHAIN = "Clang"
 
 local path_prefix = config.path_prefix and config.path_prefix or ""
 
 -- use gcc instead of ld - because I have no idea what I am doing and ld does not work
-set_linker(path_prefix.."arm-none-eabi-gcc")
+set_linker(path_prefix.."clang")
 
-set_archiver(path_prefix.."arm-none-eabi-ar")
-set_c_compiler(path_prefix.."arm-none-eabi-gcc", config.c_standard)
-set_cpp_compiler(path_prefix.."arm-none-eabi-g++", config.cpp_standard)
-set_asm_compiler(path_prefix.."arm-none-eabi-gcc")
+set_archiver(path_prefix.."llvm-ar")
+set_c_compiler(path_prefix.."clang", config.c_standard)
+set_cpp_compiler(path_prefix.."clang++", config.cpp_standard)
+set_asm_compiler(path_prefix.."clang")
+
+add_global_compile_options("C/C++", "--target=arm-none-eabi")
+add_global_link_options("--target=arm-none-eabi")
 
 add_global_compile_options("C/C++", {
     "-ffunction-sections", -- place functions in seperate sections
@@ -45,11 +48,9 @@ add_global_compile_options("C++", {
     "-fno-use-cxa-atexit",
     "-fno-threadsafe-statics",
     "-fpermissive",
-    "-Wno-volatile",
 })
 
 add_global_link_options({
-    "-specs=nano.specs", -- implement syscalls as stubs
-    "-nostartfiles",     -- do not generate start functions
     "-Wl,--gc-sections", -- remove unused sections
+    "-use-ld=lld",
 })
