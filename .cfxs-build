@@ -50,6 +50,8 @@ _G.cfxs_framework = create_library("CFXS-Framework")
 cfxs_framework:add_sources({"./src/*.c", "./src/*.cpp", "./modules/nosys.cpp"})
 
 cfxs_framework:create_precompiled_header({
+    "<stdint.h>",
+    "<stddef.h>",
     "<CFXS_Common.h>"
 })
 
