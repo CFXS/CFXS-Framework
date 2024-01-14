@@ -639,16 +639,6 @@ static size_t _etoa(out_fct_type out,
     #endif // PRINTF_SUPPORT_EXPONENTIAL
 #endif     // PRINTF_SUPPORT_FLOAT
 
-template<typename T>
-static T void_to(void* vp) {
-    union {
-        T val;
-        void* _vp;
-    } conv;
-    conv._vp = vp;
-    return conv.val;
-}
-
 // internal vsnprintf
 static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const char* format, va_list va) {
     unsigned int flags, width, precision, n;
@@ -877,7 +867,6 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
                             buffer,
                             idx,
                             maxlen,
-                            // void_to<float>(va_arg(va, void*)),
                             va_arg(va, double),
                             precision,
                             width,
