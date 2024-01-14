@@ -15,3 +15,9 @@ add_global_definitions({
     "PART_TM4C1294NCPDT",
     "TARGET_IS_TM4C129_RA2",
 })
+
+-- CFXS defines
+add_global_definitions({
+    "CFXS_ARCH_ARM",
+    "CFXS_CORE_CM4",
+})

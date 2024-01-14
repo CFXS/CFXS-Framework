@@ -12,7 +12,10 @@ if config.stl == "eastl" then
     printf(" - Exceptions "..(config.exceptions and "enabled" or "disabled"))
     printf(" - RTTI "..(config.rtti and "enabled" or "disabled"))
 
-    cfxs_framework:add_include_paths("public", "./modules/EASTL")
+    cfxs_framework:add_include_paths("public", {
+        "./modules/EASTL",
+        "./modules/SelectSTL/eastl",
+    })
     cfxs_framework:add_definitions("public", {
         "EASTL_OPENSOURCE=1",
         "EASTL_EXCEPTIONS_ENABLED="..(config.exceptions and "1" or "0"),

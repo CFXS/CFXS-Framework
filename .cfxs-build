@@ -47,11 +47,14 @@ _G.CFXS_FRAMEWORK_LIBRARIES = {}
 import("./toolchain", config)
 
 _G.cfxs_framework = create_library("CFXS-Framework")
-cfxs_framework:add_sources({"./src/*.c", "./src/*.cpp", "./modules/nosys.cpp"})
+cfxs_framework:add_sources({"./src/*.c", "./src/*.cpp"})
+cfxs_framework:add_include_paths("public", "./include")
 
 cfxs_framework:create_precompiled_header({
     "<stdint.h>",
     "<stddef.h>",
+    "<stdio.h>",
+    "<string.h>",
     "<CFXS_Common.h>"
 })
 
@@ -64,5 +67,10 @@ import("./heap.cfxs-build", config)
 
 cfxs_framework:add_libraries(_G.CFXS_FRAMEWORK_LIBRARIES)
 table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, cfxs_framework)
+
+-- Required to not break LTO
+nosys = create_library("nosys")
+nosys:add_sources("./modules/nosys.cpp")
+table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, nosys)
 
 _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = nil

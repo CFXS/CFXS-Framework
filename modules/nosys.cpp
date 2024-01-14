@@ -1,3 +1,5 @@
+#include <CFXS_Common.h>
+
 extern "C" {
 extern int _end;
 
