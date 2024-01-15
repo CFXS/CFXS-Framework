@@ -7,7 +7,7 @@ namespace CFXS {
 
     namespace Time {
 
-        extern volatile Time_t ms;
+        extern volatile Time_t ms; // NOLINT
 
     }; // namespace Time
 

@@ -3,10 +3,10 @@
 
 namespace CFXS {
 
-    using VoidFunction = void (*)(void);
+    using VoidFunction = void (*)();
 
     template<typename T>
-    constexpr void safe_call(T&& fn) {
+    constexpr void safe_call(const T& fn) {
         if (fn) {
             fn();
         }
@@ -18,6 +18,7 @@ namespace CFXS {
 
 } // namespace CFXS
 
+// NOLINTBEGIN
 #define CFXS_ENUM_UNDERLYING_OPERATORS(enumName)                                                                            \
     constexpr enumName operator|(enumName a, enumName b) {                                                                  \
         return static_cast<enumName>(static_cast<std::underlying_type<enumName>::type>(a) |                                 \
@@ -26,3 +27,4 @@ namespace CFXS {
     constexpr bool operator&(enumName a, enumName b) {                                                                      \
         return static_cast<std::underlying_type<enumName>::type>(a) & static_cast<std::underlying_type<enumName>::type>(b); \
     }
+// NOLINTEND

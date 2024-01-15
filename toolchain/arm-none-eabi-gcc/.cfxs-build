@@ -28,6 +28,12 @@ add_global_compile_options("C/C++", {
     "-fdata-sections",     -- place data in seperate sections
     "-fno-common",
     "-fno-unwind-tables",
+    
+    "-Wformat",
+    "-Wformat-security",
+    
+    "-Werror", -- warnings as errors
+    "-Wl,--fatal-warnings",
 })
 
 add_global_compile_options("C++", {

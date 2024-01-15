@@ -3,31 +3,31 @@
 extern "C" {
 extern int _end;
 
-__weak void *_sbrk(int incr) {
+__weak void *_sbrk(int) {
     return 0;
 }
 
-__weak int _close(int file) {
+__weak int _close(int) {
     return -1;
 }
 
 struct stat;
-__weak int _fstat(int file, struct stat *st) {
+__weak int _fstat(int, struct stat *) {
     return -1;
 }
 
-__weak int _isatty(int file) {
+__weak int _isatty(int) {
     return -1;
 }
 
-__weak int _lseek(int file, int ptr, int dir) {
+__weak int _lseek(int, int, int) {
     return -1;
 }
 
-__weak void _exit(int status) {
+__weak void _exit(int) {
 }
 
-__weak void _kill(int pid, int sig) {
+__weak void _kill(int, int) {
     return;
 }
 
@@ -35,11 +35,11 @@ __weak int _getpid(void) {
     return -1;
 }
 
-__weak int _write(int file, char *ptr, int len) {
+__weak int _write(int, char *, int) {
     return -1;
 }
 
-__weak int _read(int file, char *ptr, int len) {
+__weak int _read(int, char *, int) {
     return -1;
 }
 
@@ -48,10 +48,7 @@ __weak void abort() {
     }
 }
 
-extern "C" int __aeabi_atexit(void *obj, void (*dtr)(void *), void *dso_h) {
-    (void)obj;
-    (void)dtr;
-    (void)dso_h;
+extern "C" int __aeabi_atexit(void *, void (*)(void *), void *) {
     return 0;
 }
 

@@ -11,7 +11,7 @@
     #endif
 
     #ifdef CFXS_CORE_CORTEX_M
-        #define __bkpt asm volatile("bkpt 1")
+        #define __bkpt asm volatile("bkpt 1") // NOLINT
     #endif
 #else
     #error Unsupported architecture
@@ -35,20 +35,20 @@
     #define __noreturn       __attribute__((noreturn))
     #define __noinit         __attribute__((section(".noinit")))
     #define __memory_barrier asm volatile("" ::: "memory")
-    #define __rw             volatile
-    #define __ro             const volatile
+    #define __rw             volatile       // NOLINT
+    #define __ro             const volatile // NOLINT
 
-    #define __mem8(x)    (*(__rw uint8_t*)(x))
-    #define __mem16(x)   (*(__rw uint16_t*)(x))
-    #define __mem32(x)   (*(__rw uint32_t*)(x))
-    #define __mem64(x)   (*(__rw uint64_t*)(x))
-    #define __memT(T, x) (*(__rw T*)(x))
+    #define __mem8(x)    (*(__rw uint8_t*)(x))  // NOLINT
+    #define __mem16(x)   (*(__rw uint16_t*)(x)) // NOLINT
+    #define __mem32(x)   (*(__rw uint32_t*)(x)) // NOLINT
+    #define __mem64(x)   (*(__rw uint64_t*)(x)) // NOLINT
+    #define __memT(T, x) (*(__rw T*)(x))        // NOLINT
 
-    #define __nv_mem8(x)    (*(uint8_t*)(x))
-    #define __nv_mem16(x)   (*(uint16_t*)(x))
-    #define __nv_mem32(x)   (*(uint32_t*)(x))
-    #define __nv_mem64(x)   (*(uint64_t*)(x))
-    #define __nv_memT(T, x) (*(T*)(x))
+    #define __nv_mem8(x)    (*(uint8_t*)(x))  // NOLINT
+    #define __nv_mem16(x)   (*(uint16_t*)(x)) // NOLINT
+    #define __nv_mem32(x)   (*(uint32_t*)(x)) // NOLINT
+    #define __nv_mem64(x)   (*(uint64_t*)(x)) // NOLINT
+    #define __nv_memT(T, x) (*(T*)(x))        // NOLINT
 #else
     #error Unsupported compiler
 #endif

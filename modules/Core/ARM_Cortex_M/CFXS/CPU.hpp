@@ -64,8 +64,7 @@ namespace CFXS::CPU {
 
     class NoInterruptScope {
     public:
-        NoInterruptScope() {
-            m_interrupts_were_enabled = are_interrupts_enabled();
+        NoInterruptScope() : m_interrupts_were_enabled(are_interrupts_enabled()) {
             disable_interrupts();
         }
         ~NoInterruptScope() {

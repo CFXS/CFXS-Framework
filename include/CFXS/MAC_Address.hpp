@@ -7,13 +7,12 @@ namespace CFXS {
 
     class MAC_Address {
     public:
-        constexpr MAC_Address() : m_data(0, 0, 0, 0, 0, 0) {
+        constexpr MAC_Address() = default;
+        constexpr explicit MAC_Address(uint8_t b) : m_data(b, b, b, b, b, b) {
         }
-        constexpr MAC_Address(uint8_t b) : m_data(b, b, b, b, b, b) {
+        constexpr explicit MAC_Address(const uint8_t data[6]) : m_data(data[0], data[1], data[2], data[3], data[4], data[5]) {
         }
-        constexpr MAC_Address(const uint8_t data[6]) : m_data(data[0], data[1], data[2], data[3], data[4], data[5]) {
-        }
-        constexpr MAC_Address(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint8_t f) : m_data(a, b, c, d, e, f) {
+        constexpr explicit MAC_Address(uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint8_t f) : m_data(a, b, c, d, e, f) {
         }
         constexpr MAC_Address(const MAC_Address& other) {
             for (size_t i = 0; i < sizeof(m_data); i++)
@@ -23,7 +22,7 @@ namespace CFXS {
         /// @brief Construct MAC address from string
         /// @param mac_string "12:34:56:AB:CD:EF"
         template<size_t N>
-        constexpr MAC_Address(const char (&mac_string)[N]) : m_data(0, 0, 0, 0, 0, 0) {
+        constexpr explicit MAC_Address(const char (&mac_string)[N]) : m_data(0, 0, 0, 0, 0, 0) {
             int idx = 0;
             int loc = 0;
             for (size_t i = 0; i < N; i++) {
@@ -87,10 +86,10 @@ namespace CFXS {
             return *this;
         }
 
-        int print_to(char* dest, int maxLen) const;
+        int print_to(char* dest, int max_len) const;
 
     private:
-        uint8_t m_data[6];
+        uint8_t m_data[6]{};
     };
 
 } // namespace CFXS

@@ -31,14 +31,12 @@ add_global_compile_options("C/C++", {
     "-fdata-sections",     -- place data in seperate sections
     "-fno-common",
     "-fno-unwind-tables",
-
-    -- temporary for clangd
-    "-I/usr/lib/gcc/arm-none-eabi/12.2.1/include",
-    "-I/usr/lib/gcc/arm-none-eabi/12.2.1/include-fixed",
-    "-I/usr/arm-none-eabi/include",
-    "-I/usr/arm-none-eabi/include/c++/12.2.1",
-    "-I/usr/arm-none-eabi/include/c++/12.2.1/arm-none-eabi",
-    "-I/usr/arm-none-eabi/include/c++/12.2.1/backward",
+    
+    "-Wformat",
+    "-Wformat-security",
+    
+    "-Werror", -- warnings as errors
+    "-Wl,--fatal-warnings",
 })
 
 add_global_compile_options("C++", {

@@ -10,12 +10,12 @@ namespace CFXS {
     public:
         constexpr IPv4() : m_value(0) {
         }
-        constexpr IPv4(uint32_t val) : m_value(val) {
+        constexpr explicit IPv4(uint32_t val) : m_value(val) {
         }
         constexpr IPv4(uint8_t oct1, uint8_t oct2, uint8_t oct3, uint8_t oct4) : m_data(oct1, oct2, oct3, oct4) {
         }
         template<size_t N>
-        constexpr IPv4(const char (&ip_string)[N]) : m_value(0) {
+        constexpr explicit IPv4(const char (&ip_string)[N]) : m_value(0) {
             size_t octet    = 0;
             size_t num      = 0;
             uint8_t nums[3] = {0, 0, 0};
@@ -68,12 +68,11 @@ namespace CFXS {
         bool is_valid_subnet_mask() const {
             uint32_t mask = get_value();
             if (mask == 0)
-                return 0;
-            if (mask & (~mask >> 1)) {
-                return 0;
-            } else {
-                return 1;
-            }
+                return false;
+            if (mask & (~mask >> 1))
+                return false; // NOLINT
+
+            return true;
         }
 
         bool is_valid_host_address() const {
@@ -82,7 +81,7 @@ namespace CFXS {
             if (m_data[3] == 0xFF || m_data[3] == 0)
                 return false;
             if (m_data[1] == 0xFF || m_data[2] == 0xFF)
-                return false;
+                return false; // NOLINT
 
             return true;
         }
@@ -114,7 +113,7 @@ namespace CFXS {
             return *this;
         }
 
-        int print_to(char* dest, int maxLen) const;
+        int print_to(char* dest, int max_len) const;
 
     private:
         union {
