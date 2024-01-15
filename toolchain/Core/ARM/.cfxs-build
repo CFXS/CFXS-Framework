@@ -14,7 +14,6 @@ usage_assert(config.core != nil, "core not defined", CONFIG_TEMPLATE)
 -- Reference: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
 
 local function load_flags_M4(options)
-    add_global_definitions("CFXS_CORE_CORTEX_M4")
     if _G.CFXS_TOOLCHAIN == "GCC" or _G.CFXS_TOOLCHAIN == "Clang" then
         add_global_compile_options("C/C++", {
             "-mcpu=cortex-m4",
@@ -42,7 +41,6 @@ local function load_flags_M4(options)
 end
 
 local function load_flags_M7(options)
-    add_global_definitions("CFXS_CORE_CORTEX_M7")
     if _G.CFXS_TOOLCHAIN == "GCC" or _G.CFXS_TOOLCHAIN == "Clang" then
         add_global_compile_options("C/C++", {
             "-mcpu=cortex-m7",
@@ -78,12 +76,18 @@ if config.options == nil then
 end
 
 if config.core == "M4" then
+    _G.CFXS_CORE = "ARM_Cortex_M"
+    _G.CFXS_CORE_VARIANT = "4"
     load_flags_M4(config.options)
 elseif config.core == "M4F" then
+    _G.CFXS_CORE = "ARM_Cortex_M"
+    _G.CFXS_CORE_VARIANT = "4"
     -- TODO: check why call stack is broken with an error here, call stack ends at last caller, not error location
     -- error = unpack options/nil instead of config.options
     load_flags_M4({fpu = true, table.unpack(config.options)})
 elseif config.core == "M7" then
+    _G.CFXS_CORE = "ARM_Cortex_M"
+    _G.CFXS_CORE_VARIANT = "7"
     load_flags_M7({fpu = true, table.unpack(config.options)})
 else
     error("Unsupported core: ARM Cortex-" .. config.core)

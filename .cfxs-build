@@ -60,6 +60,7 @@ cfxs_framework:create_precompiled_header({
 
 _G.CFXS_FRAMEWORK_USE_LIBRARIES = {}
 
+import("./core.cfxs-build", config)
 import("./stl.cfxs-build", config)
 import("./debug_io.cfxs-build", config)
 import("./printf.cfxs-build", config)

@@ -4,3 +4,4 @@
 #include <CFXS/IPv4.hpp>
 #include <CFXS/Time.hpp>
 #include <CFXS/Utils.hpp>
+#include <CFXS/Task.hpp>

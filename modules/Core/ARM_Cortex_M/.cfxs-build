@@ -1,0 +1,14 @@
+printf("Load Core ARM Cortex-M".._G.CFXS_CORE_VARIANT)
+
+arm_cortex_m = create_library("ARM_Cortex-M".._G.CFXS_CORE_VARIANT)
+
+add_global_definitions("CFXS_CORE_CM".._G.CFXS_CORE_VARIANT)
+arm_cortex_m:add_include_paths("public", "./")
+arm_cortex_m:add_sources("./CFXS/CPU.cpp")
+arm_cortex_m:create_precompiled_header({
+    "<stdint.h>",
+    "<CFXS_Common.h>",
+})
+
+table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, arm_cortex_m)
+cfxs_framework:add_libraries(arm_cortex_m)

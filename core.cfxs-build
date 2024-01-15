@@ -1,0 +1,15 @@
+assert(_G.CFXS_ARCH != nil, "_G.CFXS_ARCH not defined")
+assert(_G.CFXS_CORE != nil, "_G.CFXS_CORE not defined")
+assert(_G.CFXS_CORE_VARIANT != nil, "_G.CFXS_CORE_VARIANT not defined")
+
+if _G.CFXS_ARCH == "ARM" then
+    add_global_definitions("CFXS_ARCH_ARM")
+    local path = "./modules/Core/".._G.CFXS_CORE
+    if exists(path) then
+        import(path)
+    else
+        error("Unsupported core: ".._G.CFXS_CORE)
+    end
+else
+    error("Unsupported architecture: ".._G.CFXS_ARCH)
+end

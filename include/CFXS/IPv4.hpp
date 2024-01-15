@@ -1,7 +1,6 @@
 // [CFXS] //
 #pragma once
 
-#include <stl/array>
 #include "ByteOrder.hpp"
 #include "Debug.hpp"
 
@@ -13,7 +12,7 @@ namespace CFXS {
         }
         constexpr IPv4(uint32_t val) : m_value(val) {
         }
-        constexpr IPv4(uint8_t oct1, uint8_t oct2, uint8_t oct3, uint8_t oct4) : m_data{oct1, oct2, oct3, oct4} {
+        constexpr IPv4(uint8_t oct1, uint8_t oct2, uint8_t oct3, uint8_t oct4) : m_data(oct1, oct2, oct3, oct4) {
         }
         template<size_t N>
         constexpr IPv4(const char (&ip_string)[N]) : m_value(0) {
@@ -66,7 +65,7 @@ namespace CFXS {
             return reinterpret_cast<const T*>(&m_value);
         }
 
-        inline bool is_valid_subnet_mask() const {
+        bool is_valid_subnet_mask() const {
             uint32_t mask = get_value();
             if (mask == 0)
                 return 0;
@@ -77,11 +76,7 @@ namespace CFXS {
             }
         }
 
-        inline bool is_limited_broadcast() const {
-            return m_value == 0xFFFFFFFF;
-        }
-
-        inline bool is_valid_host_address() const {
+        bool is_valid_host_address() const {
             if (m_data[0] == 0xFF || m_data[0] == 0)
                 return false;
             if (m_data[3] == 0xFF || m_data[3] == 0)
@@ -90,6 +85,10 @@ namespace CFXS {
                 return false;
 
             return true;
+        }
+
+        inline bool is_limited_broadcast() const {
+            return m_value == 0xFFFFFFFF;
         }
 
         constexpr bool operator==(const IPv4& other) const {
@@ -111,15 +110,15 @@ namespace CFXS {
         }
 
         inline IPv4& operator=(const IPv4& other) {
-            m_value = other.m_value;
+            memcpy(m_data, other.m_data, sizeof(m_data));
             return *this;
         }
 
-        char* print_to(char* dest, int maxLen) const;
+        int print_to(char* dest, int maxLen) const;
 
     private:
         union {
-            eastl::array<uint8_t, 4> m_data;
+            uint8_t m_data[4];
             uint32_t m_value;
         };
     };
