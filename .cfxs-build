@@ -44,9 +44,10 @@ _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
 usage_assert(config != nil, "Import arguments not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
 
 _G.CFXS_FRAMEWORK_LIBRARIES = {}
+_G.cfxs_framework = create_library("CFXS-Framework")
+
 import("./toolchain", config)
 
-_G.cfxs_framework = create_library("CFXS-Framework")
 cfxs_framework:add_sources({"./src/*.c", "./src/*.cpp"})
 cfxs_framework:add_include_paths("public", "./include")
 
@@ -68,6 +69,13 @@ import("./heap.cfxs-build", config)
 
 cfxs_framework:add_libraries(_G.CFXS_FRAMEWORK_LIBRARIES)
 table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, cfxs_framework)
+
+-- Task groups
+cfxs_framework:add_definitions("public", {
+    "PRIO_LOW=0",
+    "PRIO_HIGH=1",
+    "PRIO_SYSTEM=2",
+})
 
 -- Required to not break LTO
 nosys = create_library("nosys")

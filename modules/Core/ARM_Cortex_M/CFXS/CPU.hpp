@@ -1,10 +1,14 @@
 // [CFXS] //
 #pragma once
+#include <CFXS/Utils.hpp>
 
 namespace CFXS::CPU {
 
     // Core reset
     __noreturn void reset();
+
+    // Set system timer callback
+    void set_system_timer(VoidFunction handler, uint32_t period);
 
     // Check if debug system is enabled
     bool is_debug_enabled();
@@ -17,8 +21,16 @@ namespace CFXS::CPU {
     void enable_interrupts();
     // Disable global interrupts
     void disable_interrupts();
+    // Disable global interrupts and return true if were enabled
+    bool check_and_disable_interrupts();
     // Check if global interrupts are enabled
     bool are_interrupts_enabled();
+
+    // Set interrupt handler and move VTOR to RAM if not moved already
+    void set_interrupt_handler(uint32_t number, VoidFunction handler);
+
+    /// Wait for n cycles (precision increment: 4 cycles)
+    void delay(uint32_t cycles);
 
     /// Read IPSR register
     inline uint32_t get_ipsr() {
@@ -64,8 +76,7 @@ namespace CFXS::CPU {
 
     class NoInterruptScope {
     public:
-        NoInterruptScope() : m_interrupts_were_enabled(are_interrupts_enabled()) {
-            disable_interrupts();
+        NoInterruptScope() : m_interrupts_were_enabled(check_and_disable_interrupts()) {
         }
         ~NoInterruptScope() {
             if (m_interrupts_were_enabled)
