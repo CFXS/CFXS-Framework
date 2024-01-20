@@ -13,6 +13,9 @@ _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
     toolchain                = <toolchain preset name>,
     toolchain_path_prefix    = <path prefix (optional)>,
     part                     = "<manufacturer>/<part number>",
+
+    -- Clock Config
+    core_frequency = <number>
     
     -- Framework STL Config
     stl        = <std | eastl>,  -- Select stl:: namespace

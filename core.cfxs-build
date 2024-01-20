@@ -1,6 +1,13 @@
+local config = ...
+
 assert(_G.CFXS_ARCH != nil, "_G.CFXS_ARCH not defined")
 assert(_G.CFXS_CORE != nil, "_G.CFXS_CORE not defined")
 assert(_G.CFXS_CORE_VARIANT != nil, "_G.CFXS_CORE_VARIANT not defined")
+usage_assert(config.core_frequency != nil, "config.core_frequency not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(type(config.core_frequency) == "number", "config.core_frequency is not a number", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(math.floor(config.core_frequency) == config.core_frequency, "config.core_frequency is not an integer", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+
+cfxs_framework:add_definitions("public", "CFXS_CORE_FREQUENCY="..config.core_frequency)
 
 if _G.CFXS_ARCH == "ARM" then
     add_global_definitions("CFXS_ARCH_ARM")

@@ -25,6 +25,10 @@
     #define __unlikely     [[unlikely]]
     #define __maybe_unused [[maybe_unused]]
 
+    #ifndef __aligned
+        #define __aligned(x) __attribute__((__aligned__(x)))
+    #endif
+
     #define __interrupt        __attribute__((interrupt("irq")))
     #define __weak             __attribute__((weak))
     #define __used             __attribute__((used))
