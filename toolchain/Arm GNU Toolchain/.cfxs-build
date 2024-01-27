@@ -9,7 +9,7 @@ local CONFIG_TEMPLATE = [[
 usage_assert(config != nil, "Import arguments not defined", CONFIG_TEMPLATE)
 usage_assert(config.c_standard != nil, "c_standard not defined", CONFIG_TEMPLATE)
 usage_assert(config.cpp_standard != nil, "c_standard not defined", CONFIG_TEMPLATE)
-printf("Configure for GCC (C%s, C++%s)", config.c_standard, config.cpp_standard)
+printf("Configure for GCC (C%s, C++%s) [Arm GNU Toolchain]", config.c_standard, config.cpp_standard)
 
 _G.CFXS_TOOLCHAIN = "GCC"
 
