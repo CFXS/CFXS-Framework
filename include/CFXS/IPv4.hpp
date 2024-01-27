@@ -52,8 +52,8 @@ namespace CFXS {
         constexpr IPv4(const IPv4& other) : m_value(other.m_value) {
         }
 
-        constexpr uint32_t get_value_htonl() const {
-            return htonl(m_value);
+        constexpr uint32_t get_value_reverse() const {
+            return swap_byte_order_32(m_value);
         }
 
         constexpr uint32_t get_value() const {
