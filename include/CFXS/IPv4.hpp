@@ -8,14 +8,12 @@ namespace CFXS {
 
     class IPv4 {
     public:
-        constexpr IPv4() : m_value(0) {
-        }
-        constexpr IPv4(uint32_t val) : m_value(val) { // NOLINT
-        }
+        constexpr IPv4() : m_data(0, 0, 0, 0) {}
+        constexpr IPv4(uint32_t val) : m_data(val & 0xFF, (val >> 8) & 0xFF, (val >> 16) & 0xFF, (val >> 24) & 0xFF) {}
         constexpr IPv4(uint8_t oct1, uint8_t oct2, uint8_t oct3, uint8_t oct4) : m_data(oct1, oct2, oct3, oct4) {
         }
         template<size_t N>
-        constexpr IPv4(const char (&ip_string)[N]) : m_value(0) { // NOLINT
+        constexpr IPv4(const char (&ip_string)[N]) : m_data(0, 0, 0, 0) {
             size_t octet    = 0;
             size_t num      = 0;
             uint8_t nums[3] = {0, 0, 0};
@@ -49,20 +47,14 @@ namespace CFXS {
                 }
             }
         }
-        constexpr IPv4(const IPv4& other) : m_value(other.m_value) {
-        }
+        constexpr IPv4(const IPv4& other) : m_data{other.m_data[0], other.m_data[1], other.m_data[2], other.m_data[3]} {}
 
-        constexpr uint32_t get_value_reverse() const {
-            return swap_byte_order_32(m_value);
-        }
-
-        constexpr uint32_t get_value() const {
-            return m_value;
-        }
+        constexpr uint32_t get_value_reverse() const { return swap_byte_order_32(get_value()); }
+        constexpr uint32_t get_value() const { return *get_pointer_cast<uint32_t>(); }
 
         template<typename T>
         constexpr const T* get_pointer_cast() const {
-            return reinterpret_cast<const T*>(&m_value);
+            return reinterpret_cast<const T*>(m_data);
         }
 
         bool is_valid_subnet_mask() const {
@@ -86,17 +78,10 @@ namespace CFXS {
             return true;
         }
 
-        inline bool is_limited_broadcast() const {
-            return m_value == 0xFFFFFFFF;
-        }
+        inline bool is_limited_broadcast() const { return get_value() == 0xFFFFFFFF; }
 
-        constexpr bool operator==(const IPv4& other) const {
-            return m_value == other.m_value;
-        }
-
-        constexpr bool operator!=(const IPv4& other) const {
-            return m_value != other.m_value;
-        }
+        constexpr bool operator==(const IPv4& other) const { return get_value() == other.get_value(); }
+        constexpr bool operator!=(const IPv4& other) const { return get_value() != other.get_value(); }
 
         inline uint8_t& operator[](uint8_t index) {
             CFXS_ASSERT(index < 4, "Index (%u) out of range", index);
@@ -116,10 +101,7 @@ namespace CFXS {
         int print_to(char* dest, int max_len) const;
 
     private:
-        union {
-            uint8_t m_data[4];
-            uint32_t m_value;
-        };
+        uint8_t m_data[4];
     };
 
 } // namespace CFXS

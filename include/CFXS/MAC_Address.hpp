@@ -7,7 +7,7 @@ namespace CFXS {
 
     class MAC_Address {
     public:
-        constexpr MAC_Address() = default;
+        constexpr MAC_Address() : m_data(0, 0, 0, 0, 0, 0) {}
         constexpr explicit MAC_Address(uint8_t b) : m_data(b, b, b, b, b, b) {
         }
         constexpr explicit MAC_Address(const uint8_t data[6]) : m_data(data[0], data[1], data[2], data[3], data[4], data[5]) {
@@ -89,7 +89,7 @@ namespace CFXS {
         int print_to(char* dest, int max_len) const;
 
     private:
-        uint8_t m_data[6]{};
+        uint8_t m_data[6];
     };
 
 } // namespace CFXS
