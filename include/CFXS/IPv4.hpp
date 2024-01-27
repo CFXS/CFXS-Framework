@@ -10,12 +10,12 @@ namespace CFXS {
     public:
         constexpr IPv4() : m_value(0) {
         }
-        constexpr explicit IPv4(uint32_t val) : m_value(val) {
+        constexpr IPv4(uint32_t val) : m_value(val) { // NOLINT
         }
         constexpr IPv4(uint8_t oct1, uint8_t oct2, uint8_t oct3, uint8_t oct4) : m_data(oct1, oct2, oct3, oct4) {
         }
         template<size_t N>
-        constexpr explicit IPv4(const char (&ip_string)[N]) : m_value(0) {
+        constexpr IPv4(const char (&ip_string)[N]) : m_value(0) { // NOLINT
             size_t octet    = 0;
             size_t num      = 0;
             uint8_t nums[3] = {0, 0, 0};
