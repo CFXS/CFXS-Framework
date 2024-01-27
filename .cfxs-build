@@ -42,6 +42,14 @@ _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
     -- Heap Config
     heap = <"dlmalloc"/nil> -- Heap implementation (default = dlmalloc/nil)
     heap_config = *
+
+    -- lwIP Config
+    lwip = {
+        use_custom_port = <path>, -- (default = nil/false/use builtin) Use custom lwIP port
+        lwipopts_path   = <path to lwipopts.h directory>,
+        
+        dhcp = <boolean>, -- true = enable DHCP
+    }
 }
 ]]
 usage_assert(config != nil, "Import arguments not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
@@ -58,17 +66,17 @@ cfxs_framework:create_precompiled_header({
     "<stdint.h>",
     "<stddef.h>",
     "<stdio.h>",
+    "<stdlib.h>",
     "<string.h>",
     "<CFXS_Common.h>"
 })
-
-_G.CFXS_FRAMEWORK_USE_LIBRARIES = {}
 
 import("./core.cfxs-build", config)
 import("./stl.cfxs-build", config)
 import("./debug_io.cfxs-build", config)
 import("./printf.cfxs-build", config)
 import("./heap.cfxs-build", config)
+import("./lwip.cfxs-build", config)
 
 cfxs_framework:add_libraries(_G.CFXS_FRAMEWORK_LIBRARIES)
 table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, cfxs_framework)

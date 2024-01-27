@@ -1,0 +1,43 @@
+
+
+-- import_git("https://github.com/CFXS/lwip", "cfxs-build", {
+--     lwipopts_path = get_current_directory_path().."/include",
+--     port_path = get_current_directory_path().."/lwip_port",
+--     dhcp = true,
+-- })
+
+local config = ...
+
+if config.lwip == nil then
+    return
+else
+    usage_assert(type(config.lwip) == "table", "lwip is not a table", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+end
+
+local cfg = config.lwip
+
+usage_assert(cfg.lwipopts_directory != nil, "lwipopts_directory not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(type(cfg.lwipopts_directory) == "string", "lwipopts_directory not a string", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(exists(cfg.lwipopts_directory), "lwipopts_directory not found", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+usage_assert(exists(cfg.lwipopts_directory.."/lwipopts.h"), "lwipopts_directory does not contain lwipopts.h", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
+
+local function get_port_path()
+    if type(cfg.use_custom_port) == "string" then
+        printf("Use custom lwIP port @ \""..cfg.use_custom_port.."\"")
+        assert(exists(cfg.use_custom_port), "lwIP custom port path does not exist")
+        return cfg.use_custom_port
+    else
+        assert(_G.CFXS_SELECTED_PART.lwip_port_directory != nil, "Selected part does not have built-in lwIP port :(")
+        cfxs_framework:add_sources(_G.CFXS_SELECTED_PART.lwip_port_directory.."/*.cpp")
+        cfxs_framework:add_sources(_G.CFXS_SELECTED_PART.lwip_port_directory.."/netif/*.cpp")
+        return _G.CFXS_SELECTED_PART.lwip_port_directory
+    end
+end
+
+import_git("https://github.com/CFXS/lwip", "cfxs-build", {
+    lwipopts_path = cfg.lwipopts_directory,
+    port_path = get_port_path(),
+    dhcp = cfg.dhcp,
+})
+
+table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, lwip)

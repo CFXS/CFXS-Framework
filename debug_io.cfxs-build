@@ -15,7 +15,7 @@ elseif config.debug_io == "segger_rtt" then
         printf(" ! config.debug_io_config not defined")
     end
     import_git("https://github.com/CFXS/SeggerRTT-printf.git", "master", config.debug_io_config)
-    table.insert(_G.CFXS_FRAMEWORK_USE_LIBRARIES, segger_rtt)
+    table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, segger_rtt)
     cfxs_framework:add_libraries(segger_rtt)
     cfxs_framework:add_sources("./modules/DebugIO/segger_rtt.cpp")
 elseif config.debug_io == "swo" then

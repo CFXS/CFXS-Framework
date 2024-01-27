@@ -16,9 +16,13 @@ if exists(part_path) then
     import_git("https://github.com/CFXS/tm4c-driverlib", "master")
     table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, tm4c_driverlib)
 
-    cfxs_framework:add_sources("./driverlib_port.cpp")
+    cfxs_framework:add_sources("./Ports/TM4C/driverlib_port.cpp")
 
     printf(" - Selected Part: Texas Instruments "..config.part)
+
+    _G.CFXS_SELECTED_PART = {
+        lwip_port_directory = get_current_directory_path().."/Ports/TM4C/lwip"
+    }
 else
     error("Unknown part: Texas Instruments "..config.part)
 end
