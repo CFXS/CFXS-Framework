@@ -558,9 +558,9 @@ static void s_lwip_initialize(__maybe_unused void *arg) {
     // Setup the network address values.
     //
     if (g_ip_mode == IPADDR_USE_STATIC) {
-        ip_addr.addr  = htonl(g_ip_address);
-        net_mask.addr = htonl(g_netmask);
-        gw_addr.addr  = htonl(g_gateway);
+        ip_addr.addr  = g_ip_address;
+        net_mask.addr = g_netmask;
+        gw_addr.addr  = g_gateway;
     } else {
         ip_addr.addr  = 0;
         net_mask.addr = 0;
