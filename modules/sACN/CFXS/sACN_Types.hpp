@@ -12,14 +12,14 @@ namespace CFXS::sACN {
     // 0x41 0x53 0x43 0x2D 0x45 0x31 0x2E 0x31 0x37 0x00 0x00 0x00 (ASC-E1.17\0\0\0)
     static constexpr uint8_t ASC_E117_ID[12] = {0x41, 0x53, 0x43, 0x2D, 0x45, 0x31, 0x2E, 0x31, 0x37, 0x00, 0x00, 0x00};
 
-    // Vectors
-    static constexpr uint32_t VECTOR_ROOT_E131_DATA                   = 0x00000004;
-    static constexpr uint32_t VECTOR_ROOT_E131_EXTENDED               = 0x00000008;
+    // Vectors (network order)
+    static constexpr uint32_t VECTOR_ROOT_E131_DATA                   = 0x04000000;
+    static constexpr uint32_t VECTOR_ROOT_E131_EXTENDED               = 0x08000000;
     static constexpr uint32_t VECTOR_DMP_SET_PROPERTY                 = 0x02;
-    static constexpr uint32_t VECTOR_E131_DATA_PACKET                 = 0x00000002;
-    static constexpr uint32_t VECTOR_E131_EXTENDED_SYNCHRONIZATION    = 0x00000001;
-    static constexpr uint32_t VECTOR_E131_EXTENDED_DISCOVERY          = 0x00000002;
-    static constexpr uint32_t VECTOR_UNIVERSE_DISCOVERY_UNIVERSE_LIST = 0x00000001;
+    static constexpr uint32_t VECTOR_E131_DATA_PACKET                 = 0x02000000;
+    static constexpr uint32_t VECTOR_E131_EXTENDED_SYNCHRONIZATION    = 0x01000000;
+    static constexpr uint32_t VECTOR_E131_EXTENDED_DISCOVERY          = 0x02000000;
+    static constexpr uint32_t VECTOR_UNIVERSE_DISCOVERY_UNIVERSE_LIST = 0x01000000;
 
 #pragma pack(1)
     struct ACN_ID {
@@ -37,8 +37,12 @@ namespace CFXS::sACN {
         UUID cid;
 
         template<typename T>
-        inline T* cast_pdu() {
+        inline T* cast_next() {
             return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(this) + sizeof(*this));
+        }
+        template<typename T>
+        inline const T* cast_next() const {
+            return reinterpret_cast<const T*>(reinterpret_cast<const uint8_t*>(this) + sizeof(*this));
         }
 
         inline uint16_t get_length() const { return flags_and_length & 0x0FFF; }
@@ -48,11 +52,6 @@ namespace CFXS::sACN {
     struct PDU {
         uint16_t flags_and_length; // low 12 bits = PDU length, high 4 bits = flags
         uint32_t vector;
-
-        template<typename T>
-        inline T* cast_pdu() {
-            return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(this) + sizeof(*this));
-        }
 
         inline uint16_t get_length() const { return flags_and_length & 0x0FFF; }
         inline uint16_t get_flags() const { return flags_and_length >> 12; }
@@ -78,12 +77,17 @@ namespace CFXS::sACN {
     };
 
     struct FramingLayer_Data : PDU {
+        static constexpr uint8_t PREVIEW_DATA          = 1 << 7; // Do not generate actual output
+        static constexpr uint8_t STREAM_TERMINATED     = 1 << 6; // Last packet of stream
+        static constexpr uint8_t FORCE_SYNCHRONIZATION = 1 << 5; // Synchronize now
+
         char source_name[64]; // UTF-8 null-terminated
         uint8_t priority;     // 0-200 (default = 100)
         uint16_t synchronization_address;
         uint8_t sequence_number;
         uint8_t options;
         uint16_t universe;
+        DMPLayer dmp;
     };
 
     struct FramingLayer_Synchronization : PDU {
@@ -94,6 +98,7 @@ namespace CFXS::sACN {
 
     struct FramingLayer_Discovery : PDU {
         char source_name[64]; // UTF-8 null-terminated
+        UniverseDiscoveryLayer udl;
     };
 #pragma pack()
 

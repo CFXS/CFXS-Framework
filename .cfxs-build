@@ -50,6 +50,10 @@ _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE = [[
         
         dhcp = <boolean>, -- true = enable DHCP
     }
+
+    -- [Modules]
+    -- sACN
+    sacn = <boolean>
 }
 ]]
 usage_assert(config != nil, "Import arguments not defined", _G.__CFXS_FRAMEWORK_CONFIG_TEMPLATE)
@@ -77,6 +81,7 @@ import("./debug_io.cfxs-build", config)
 import("./printf.cfxs-build", config)
 import("./heap.cfxs-build", config)
 import("./lwip.cfxs-build", config)
+import("./sacn.cfxs-build", config)
 
 cfxs_framework:add_libraries(_G.CFXS_FRAMEWORK_LIBRARIES)
 table.insert(_G.CFXS_FRAMEWORK_LIBRARIES, cfxs_framework)

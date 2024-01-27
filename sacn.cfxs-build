@@ -1,0 +1,8 @@
+local config = ...
+
+if not config.sacn then
+    return
+end
+
+cfxs_framework:add_include_paths("public", "./modules/sACN")
+cfxs_framework:add_sources("./modules/sACN/**.cpp")
