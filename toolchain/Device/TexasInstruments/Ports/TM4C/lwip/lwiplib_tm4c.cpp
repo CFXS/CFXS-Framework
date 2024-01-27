@@ -90,7 +90,7 @@ extern "C" void lwip_process_host_timer(void);
 // The application's interrupt handler for hardware timer events from the MAC.
 //
 //*****************************************************************************
-tHardwareTimerHandler g_lwip_timer_handler;
+tHardwareTimerHandler g_lwip_timestamp_handler;
 
 //*****************************************************************************
 //
@@ -305,7 +305,7 @@ static void s_lwip_detect_link(void) {
     //
     // Return without doing anything else if the link state hasn't changed.
     //
-    if (have_link == g_lwip_link_active) {
+    if (g_ip_mode == IPADDR_USE_STATIC || have_link == g_lwip_link_active) {
         return;
     }
 
@@ -375,13 +375,13 @@ static void s_lwip_detect_link(void) {
 //*****************************************************************************
 #if NO_SYS
 // lwIPServiceTimers
-void lwip_process_timers(void) {
+void lwip_process_timers() {
     //
     // Service the host timer.
     //
     #if HOST_TMR_INTERVAL
-    if ((g_ui32LocalTimer - g_ui32HostTimer) >= HOST_TMR_INTERVAL) {
-        g_ui32HostTimer = g_ui32LocalTimer;
+    if ((g_lwip_local_timer - g_lwip_host_timer) >= HOST_TMR_INTERVAL) {
+        g_lwip_host_timer = g_lwip_local_timer;
         lwip_process_host_timer();
     }
     #endif
@@ -826,7 +826,7 @@ void lwip_register_timer_callback(tHardwareTimerHandler timer_callback) {
     //
     // Remember the callback function address passed.
     //
-    g_lwip_timer_handler = timer_callback;
+    g_lwip_timestamp_handler = timer_callback;
 }
 
 //*****************************************************************************
@@ -862,7 +862,7 @@ void lwip_timer(uint32_t system_time) {
 
     sys_check_timeouts();
 
-    receive_poll(&g_netif);
+    // receive_poll(&g_netif);
 
     //HWREG(NVIC_SW_TRIG) |= INT_EMAC0 - 16;
 }
@@ -935,8 +935,8 @@ void lwip_ethernet_interrupt_handler(void) {
         //
         // If a timer interrupt handler has been registered, call it.
         //
-        if (g_lwip_timer_handler) {
-            g_lwip_timer_handler(EMAC0_BASE, timer_status);
+        if (g_lwip_timestamp_handler) {
+            g_lwip_timestamp_handler(EMAC0_BASE, timer_status);
         }
     }
 
