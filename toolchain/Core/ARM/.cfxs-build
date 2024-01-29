@@ -30,6 +30,8 @@ local function load_flags_M4(options)
         if options.no_thumb == nil then
             add_global_compile_options("C/C++", "-mthumb")
             add_global_link_options("-mthumb")
+            add_global_compile_options("C/C++", "-mthumb-interwork")
+            add_global_link_options("-mthumb-interwork")
         end
         if options.fpu == true then
             add_global_compile_options("C/C++", "-mfpu=fpv4-sp-d16")
@@ -57,6 +59,8 @@ local function load_flags_M7(options)
         if options.no_thumb == nil then
             add_global_compile_options("C/C++", "-mthumb")
             add_global_link_options("-mthumb")
+            add_global_compile_options("C/C++", "-mthumb-interwork")
+            add_global_link_options("-mthumb-interwork")
         end
         if options.fpu == true then
             add_global_compile_options("C/C++", "-mfpu=fpv5-sp-d16")
