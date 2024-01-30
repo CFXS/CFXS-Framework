@@ -22,6 +22,17 @@ if config.stl == "eastl" then
         "EASTL_RTTI_ENABLED="..(config.rtti and "1" or "0"),
         "stl=eastl",
     })
+elseif config.stl == "std" then
+    printf(" - Selected stl: std")
+    printf(" - Exceptions "..(config.exceptions and "enabled" or "disabled"))
+    printf(" - RTTI "..(config.rtti and "enabled" or "disabled"))
+
+    cfxs_framework:add_include_paths("public", {
+        "./modules/SelectSTL/std",
+    })
+    cfxs_framework:add_definitions("public", {
+        "stl=std",
+    })
 else
     error("Unsupported stl: "..config.stl)
 end
